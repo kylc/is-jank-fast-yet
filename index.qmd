@@ -1,0 +1,60 @@
+---
+title: "Is jank fast yet?"
+execute:
+  echo: false
+format:
+  html:
+    embed-resources: true
+jupyter: python3
+---
+
+This page monitors relative performance of Clojure implementations over time.
+
+[github.com:kylc/is-jank-fast-yet](https://github.com/kylc/is-jank-fast-yet)
+
+```{python}
+import os
+from pathlib import Path
+
+import pandas as pd
+import plotly.express as px
+```
+
+```{python}
+# | output: asis
+
+DATA_DIR = Path(os.environ.get("IJFY_DATA_DIR", "data"))
+
+for bench_file_path in DATA_DIR.glob("*.csv"):
+    print(f"### {bench_file_path.stem}")
+
+    df = pd.read_csv(
+        bench_file_path, names=["start_time", "language", "version", "duration_ms"]
+    )
+    fig = px.scatter(
+        df,
+        x="start_time",
+        y="duration_ms",
+        color="language",
+        template="plotly_white",
+        hover_name="language",
+        hover_data=["start_time", "version", "duration_ms"],
+        labels={
+            "start_time": "Run Date (UTC)",
+            "duration_ms": "Execution Time (ms)",
+            "language": "Language",
+            "version": "Version",
+        },
+    )
+    fig.update_layout(
+        legend=dict(
+            orientation="h",
+            yanchor="bottom",
+            y=1.02,
+            xanchor="right",
+            x=1,
+            title_text="Language",
+        )
+    )
+    fig.show(config={"displayModeBar": False})
+```

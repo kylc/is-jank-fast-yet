@@ -1,0 +1,7 @@
+*.html
+/data
+/target
+
+/.quarto/
+**/*.quarto_ipynb
+/gh-pages-checkout
