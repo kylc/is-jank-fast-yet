@@ -19,6 +19,8 @@
         {
           devShells.default = pkgs.mkShell {
             packages = with pkgs; [
+              nix
+
               uv
               ruff
               quarto
