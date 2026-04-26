@@ -1,10 +1,7 @@
-(defn fib [n]
-  (loop [curr n
-         a    0
-         b    1]
-    (if (zero? curr)
-      a
-      (recur (dec curr) b (+' a b)))))
+(defn fib ^long [^long n]
+  (if (<= n 1) n
+      (+ (fib (- n 1))
+         (fib (- n 2)))))
 
-(dotimes [i 100]
-  (time (fib 50000)))
+(dotimes [_ 50]
+  (time (fib 30)))
