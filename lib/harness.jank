@@ -1,0 +1,6 @@
+(ns harness
+  (:require [jank.perf :as perf]))
+
+(defmacro bench [expr]
+  `(perf/benchmark {:label "something"} ~expr))
+

@@ -1,8 +1,9 @@
-(defn do-sleep []
-  #?(:clj (Thread/sleep 100)
-     :bb (Thread/sleep 100)
-     :jank (cpp/std.this_thread.sleep_for
-            (cpp/std.chrono.milliseconds #cpp 100))))
+(require 'harness)
 
-(dotimes [_ 10]
-  (time (do-sleep)))
+(defn do-sleep [ms]
+  #?(:clj (Thread/sleep ms)
+     :bb (Thread/sleep ms)
+     :jank (cpp/std.this_thread.sleep_for
+            (cpp/std.chrono.milliseconds (cpp/int ms)))))
+
+(harness/bench (do-sleep 100))

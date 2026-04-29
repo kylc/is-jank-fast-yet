@@ -1,3 +1,5 @@
+(require 'harness)
+
 (def N 30)
 
 (defn fib [n]
@@ -5,5 +7,4 @@
       (+ (fib (- n 1))
          (fib (- n 2)))))
 
-(dotimes [_ 50]
-  (time (println (fib N))))
+(harness/bench (println (fib N)))

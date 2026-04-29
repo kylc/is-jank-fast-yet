@@ -14,7 +14,8 @@ OUTPUT_DIR = os.environ["IJFY_OUTPUT_DIR"]
 
 
 def parse_time_macro(s: str):
-    return [float(m.group(1)) for m in re.finditer(r"Elapsed time: (\d+\.\d+)", s)]
+    m = re.search(r"Elapsed time: (\d+\.\d+)", s)
+    return float(m.group(1))
 
 
 class Runner:
@@ -27,8 +28,9 @@ class Runner:
 
 class ClojureRunner(Runner):
     def _run_clojure(args: list[str]):
+        cmd = f"{CLJ_CMD} {' '.join(args)}"
         return subprocess.run(
-            f"{CLJ_CMD} {' '.join(args)}",
+            cmd,
             shell=True,
             capture_output=True,
             text=True,
@@ -43,14 +45,22 @@ class ClojureRunner(Runner):
         return match.group(1)
 
     def run(self, file: Path) -> float:
-        result = ClojureRunner._run_clojure(["-M", str(file)])
-        return min(parse_time_macro(result.stdout))
+        result = ClojureRunner._run_clojure(
+            [
+                "-Sdeps",
+                '\'{:paths ["lib"] :deps {criterium/criterium {:mvn/version "0.4.6"}}}\'',
+                "-M",
+                str(file),
+            ]
+        )
+        return parse_time_macro(result.stdout)
 
 
 class BabashkaRunner(Runner):
     def _run_bb(args: list[str]):
+        cmd = f"{BB_CMD} {' '.join(args)}"
         return subprocess.run(
-            f"{BB_CMD} {' '.join(args)}",
+            cmd,
             shell=True,
             capture_output=True,
             text=True,
@@ -65,14 +75,15 @@ class BabashkaRunner(Runner):
         return match.group(1)
 
     def run(self, file: Path) -> float:
-        result = BabashkaRunner._run_bb([str(file)])
-        return min(parse_time_macro(result.stdout))
+        result = BabashkaRunner._run_bb(["-cp", "lib", str(file)])
+        return parse_time_macro(result.stdout)
 
 
 class JankRunner(Runner):
     def _run_jank(args: list[str]):
+        cmd = f"{JANK_CMD} {' '.join(args)}"
         return subprocess.run(
-            f"{JANK_CMD} {' '.join(args)}",
+            cmd,
             shell=True,
             capture_output=True,
             text=True,
@@ -87,8 +98,17 @@ class JankRunner(Runner):
         return match.group(1)
 
     def run(self, file: Path) -> float:
-        result = JankRunner._run_jank(["-O3", "--eagerness", "eager", "run", str(file)])
-        return min(parse_time_macro(result.stdout))
+        result = JankRunner._run_jank(
+            ["--module-path", "lib", "-O3", "--eagerness", "eager", "run", str(file)]
+        )
+
+        # TODO: simplify this one jank.perf can return benchmark results as
+        # data.
+        m = re.search(r"\|\s+(\d+\.\d+)", result.stdout)
+        duration_ms = float(m.group(1))
+        duration_s = 1e-3 * duration_ms
+
+        return duration_s
 
 
 if __name__ == "__main__":
@@ -109,7 +129,9 @@ if __name__ == "__main__":
         with open(output_path, "a") as output_file:
             for runner in runners:
                 duration = runner.run(bench)
-                print(f"{runner.name():<20}{runner.version():<20}\t{duration:.3f}ms")
+                duration_ms = 1e3 * duration
+
+                print(f"{runner.name():<20}{runner.version():<20}\t{duration_ms:.3f}ms")
 
                 output_file.write(
                     ",".join(
@@ -117,7 +139,7 @@ if __name__ == "__main__":
                             str(start_time),
                             runner.name(),
                             runner.version(),
-                            str(duration),
+                            str(duration_ms),
                         ]
                     )
                     + "\n"
