@@ -2,12 +2,13 @@
 
 set -eux
 
+# Refresh the runtime versions in our nix cache
 NIX_FLAGS="--extra-substituters https://jank-lang.cachix.org \
     --extra-trusted-public-keys jank-lang.cachix.org-1:iLjYBD9b/v1D6FxUByF976x3BQ/AJGsQL1Rm49Sw7Fg="
-
-nix build $NIX_FLAGS --refresh github:NixOS/nixpkgs/nixos-unstable#clojure
-nix build $NIX_FLAGS --refresh github:NixOS/nixpkgs/nixos-unstable#babashka
-nix build $NIX_FLAGS --refresh git+https://github.com/jank-lang/jank?submodules=1
+nix build $NIX_FLAGS --refresh \
+    github:NixOS/nixpkgs/nixos-unstable#clojure \
+    github:NixOS/nixpkgs/nixos-unstable#babashka \
+    git+https://github.com/jank-lang/jank
 
 export IJFY_CLJ_CMD="nix run --offline github:NixOS/nixpkgs/nixos-unstable#clojure --"
 export IJFY_BB_CMD="nix run --offline github:NixOS/nixpkgs/nixos-unstable#babashka --"
