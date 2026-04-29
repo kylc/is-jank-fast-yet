@@ -36,7 +36,12 @@ xmin = min(df["start_time"].min() for df in dfs)
 xmax = max(df["start_time"].max() for df in dfs)
 
 for bench_file_path, df in zip(bench_file_paths, dfs):
-    print(f"### {bench_file_path.stem}")
+    title = bench_file_path.stem
+    source_url = (
+        f"https://github.com/kylc/is-jank-fast-yet/blob/master/benches/{title}.cljc"
+    )
+
+    print(f"### [{title}]({source_url})")
 
     fig = px.line(
         df,
