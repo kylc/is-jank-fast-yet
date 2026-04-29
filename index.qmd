@@ -31,7 +31,7 @@ for bench_file_path in DATA_DIR.glob("*.csv"):
     df = pd.read_csv(
         bench_file_path, names=["start_time", "language", "version", "duration_ms"]
     )
-    fig = px.scatter(
+    fig = px.line(
         df,
         x="start_time",
         y="duration_ms",
@@ -45,6 +45,7 @@ for bench_file_path in DATA_DIR.glob("*.csv"):
             "language": "Language",
             "version": "Version",
         },
+        markers=True,
     )
     fig.update_layout(
         legend=dict(
