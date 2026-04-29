@@ -87,7 +87,7 @@ class JankRunner(Runner):
         return match.group(1)
 
     def run(self, file: Path) -> float:
-        result = JankRunner._run_jank(["run", str(file)])
+        result = JankRunner._run_jank(["-O3", "--eagerness", "eager", "run", str(file)])
         return min(parse_time_macro(result.stdout))
 
 
