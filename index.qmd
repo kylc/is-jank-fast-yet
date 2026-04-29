@@ -41,7 +41,7 @@ for bench_file_path, df in zip(bench_file_paths, dfs):
         f"https://github.com/kylc/is-jank-fast-yet/blob/master/benches/{title}.cljc"
     )
 
-    print(f"### [{title}]({source_url})")
+    print(f"### {title} <sup><small>[src]({source_url})<small></sup>")
 
     fig = px.line(
         df,
