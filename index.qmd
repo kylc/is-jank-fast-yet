@@ -25,16 +25,24 @@ import plotly.express as px
 
 DATA_DIR = Path(os.environ.get("IJFY_DATA_DIR", "data"))
 
-for bench_file_path in DATA_DIR.glob("*.csv"):
+bench_file_paths = list(DATA_DIR.glob("*.csv"))
+dfs = [
+    pd.read_csv(p, names=["start_time", "language", "version", "duration_ms"])
+    for p in bench_file_paths
+]
+
+# Compute a common X range for all plots.
+xmin = min(df["start_time"].min() for df in dfs)
+xmax = max(df["start_time"].max() for df in dfs)
+
+for bench_file_path, df in zip(bench_file_paths, dfs):
     print(f"### {bench_file_path.stem}")
 
-    df = pd.read_csv(
-        bench_file_path, names=["start_time", "language", "version", "duration_ms"]
-    )
     fig = px.line(
         df,
         x="start_time",
         y="duration_ms",
+        range_x=[xmin, xmax],
         color="language",
         template="plotly_white",
         hover_name="language",
