@@ -9,5 +9,5 @@
 (defmacro bench [expr]
   `(let [result# (crit/quick-benchmark ~expr benchmark-options)
          mean#   (first (:mean result#))]
-     (println "Elapsed time:" mean# "s")))
+     (println "Elapsed time:" (format "%f" mean#) "s")))
 

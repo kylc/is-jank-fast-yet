@@ -11,5 +11,5 @@
            duration (-> (- end-time start-time)
                         (* 1e-9) ;; ns -> s
                         (/ N))]
-       (println "Elapsed time:" duration "s"))))
+       (println "Elapsed time:" (format "%f" duration) "s"))))
 
