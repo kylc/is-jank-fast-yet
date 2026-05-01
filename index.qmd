@@ -26,7 +26,7 @@ import plotly.express as px
 
 DATA_DIR = Path(os.environ.get("IJFY_DATA_DIR", "data"))
 
-bench_file_paths = list(DATA_DIR.glob("*.csv"))
+bench_file_paths = sorted(list(DATA_DIR.glob("*.csv")))
 dfs = [
     pd.read_csv(p, names=["start_time", "language", "version", "duration_ms"])
     for p in bench_file_paths
