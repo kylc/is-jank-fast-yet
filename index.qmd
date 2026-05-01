@@ -63,9 +63,10 @@ for bench_file_path, df in zip(bench_file_paths, dfs):
             "language": "Language",
             "version": "Version",
         },
-        height=400,
+        height=300,
         markers=True,
     )
+    fig.update_xaxes(tickformat="%-m/%-d\n%Y", title_text=None)
     fig.update_yaxes(ticksuffix="x")
     fig.update_layout(
         legend=dict(
