@@ -45,16 +45,6 @@ while [[ $# -gt 0 ]]; do
 	esac
 done
 
-# Refresh the runtime versions in our nix cache
-NIX_BUILD_FLAGS="--extra-substituters https://jank-lang.cachix.org \
-    --extra-trusted-public-keys jank-lang.cachix.org-1:iLjYBD9b/v1D6FxUByF976x3BQ/AJGsQL1Rm49Sw7Fg="
-
-echo "Populating nix cache with language runtimes"
-nix build $NIX_BUILD_FLAGS --refresh \
-	github:NixOS/nixpkgs/nixos-unstable#clojure \
-	github:NixOS/nixpkgs/nixos-unstable#babashka \
-	$JANK_SOURCE
-
 export IJFY_CLJ_CMD="nix run --offline github:NixOS/nixpkgs/nixos-unstable#clojure --"
 export IJFY_BB_CMD="nix run --offline github:NixOS/nixpkgs/nixos-unstable#babashka --"
 export IJFY_JANK_CMD="nix run --offline $JANK_SOURCE --"
@@ -64,6 +54,16 @@ export IJFY_DATA_DIR="$IJFY_OUTPUT_DIR/data"
 mkdir -p $IJFY_OUTPUT_DIR $IJFY_DATA_DIR
 
 if [ "$RUN" = true ]; then
+    # Refresh the runtime versions in our nix cache
+    NIX_BUILD_FLAGS="--extra-substituters https://jank-lang.cachix.org \
+        --extra-trusted-public-keys jank-lang.cachix.org-1:iLjYBD9b/v1D6FxUByF976x3BQ/AJGsQL1Rm49Sw7Fg="
+
+    echo "Populating nix cache with language runtimes"
+    nix build $NIX_BUILD_FLAGS --refresh \
+        github:NixOS/nixpkgs/nixos-unstable#clojure \
+        github:NixOS/nixpkgs/nixos-unstable#babashka \
+        $JANK_SOURCE
+
 	echo "Running bechmarks..."
 	python3 harness.py
 fi
