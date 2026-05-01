@@ -63,6 +63,7 @@ for bench_file_path, df in zip(bench_file_paths, dfs):
             "language": "Language",
             "version": "Version",
         },
+        height=400,
         markers=True,
     )
     fig.update_yaxes(ticksuffix="x")
