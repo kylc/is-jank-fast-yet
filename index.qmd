@@ -15,6 +15,7 @@ This page monitors relative performance of Clojure implementations over time.
 ```{python}
 import os
 from pathlib import Path
+from datetime import datetime, UTC
 
 import pandas as pd
 import plotly.express as px
@@ -33,7 +34,7 @@ dfs = [
 
 # Compute a common X range for all plots.
 xmin = min(df["start_time"].min() for df in dfs)
-xmax = max(df["start_time"].max() for df in dfs)
+xmax = datetime.now(UTC)
 
 for bench_file_path, df in zip(bench_file_paths, dfs):
     title = bench_file_path.stem
