@@ -44,23 +44,28 @@ for bench_file_path, df in zip(bench_file_paths, dfs):
 
     print(f"### {title} <sup><small>[src]({source_url})<small></sup>")
 
+    # Times are shown relative to the first data point of the fastest dialect.
+    ybaseline = df.groupby("language").nth(0)["duration_ms"].min()
+    df["relative"] = df["duration_ms"] / ybaseline
+
     fig = px.line(
         df,
         x="start_time",
-        y="duration_ms",
+        y="relative",
         range_x=[xmin, xmax],
         color="language",
         template="plotly_white",
         hover_name="language",
-        hover_data=["start_time", "version", "duration_ms"],
+        hover_data=["start_time", "version", "relative", "duration_ms"],
         labels={
             "start_time": "Run Date (UTC)",
-            "duration_ms": "Execution Time (ms)",
+            "relative": "Rel. Execution Time",
             "language": "Language",
             "version": "Version",
         },
         markers=True,
     )
+    fig.update_yaxes(ticksuffix="x")
     fig.update_layout(
         legend=dict(
             orientation="h",
