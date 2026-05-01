@@ -28,7 +28,11 @@ DATA_DIR = Path(os.environ.get("IJFY_DATA_DIR", "data"))
 
 bench_file_paths = sorted(list(DATA_DIR.glob("*.csv")))
 dfs = [
-    pd.read_csv(p, names=["start_time", "language", "version", "duration_ms"])
+    pd.read_csv(
+        p,
+        names=["start_time", "language", "version", "duration_ms"],
+        parse_dates=["start_time"],
+    )
     for p in bench_file_paths
 ]
 
