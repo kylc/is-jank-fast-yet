@@ -72,6 +72,9 @@ if [ "$RUN" = true ]; then
         github:NixOS/nixpkgs/nixos-unstable#babashka \
         $JANK_SOURCE
 
+    # Clear jank cache before running
+    rm -rf $HOME/.cache/jank
+
 	echo "Running bechmarks..."
 	python3 harness.py
 fi
