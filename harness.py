@@ -10,6 +10,7 @@ CLJ_CMD = os.environ.get("IJFY_CLJ_CMD", "clj")
 BB_CMD = os.environ.get("IJFY_BB_CMD", "bb")
 JANK_CMD = os.environ.get("IJFY_JANK_CMD", "jank")
 
+DRYRUN = os.environ.get("IJFY_DRYRUN", "False").lower() == "true"
 OUTPUT_DIR = os.environ["IJFY_OUTPUT_DIR"]
 
 
@@ -133,14 +134,15 @@ if __name__ == "__main__":
 
                 print(f"{runner.name():<20}{runner.version():<20}\t{duration_ms:.3f}ms")
 
-                output_file.write(
-                    ",".join(
-                        [
-                            str(start_time),
-                            runner.name(),
-                            runner.version(),
-                            str(duration_ms),
-                        ]
+                if not DRYRUN:
+                    output_file.write(
+                        ",".join(
+                            [
+                                str(start_time),
+                                runner.name(),
+                                runner.version(),
+                                str(duration_ms),
+                            ]
+                        )
+                        + "\n"
                     )
-                    + "\n"
-                )
