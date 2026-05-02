@@ -75,7 +75,7 @@ if [ "$RUN" = true ]; then
     # Clear jank cache before running
     rm -rf $HOME/.cache/jank
 
-	echo "Running bechmarks..."
+	echo "Running benchmarks..."
 	python3 harness.py
 fi
 
