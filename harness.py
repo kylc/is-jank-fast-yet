@@ -49,7 +49,7 @@ class ClojureRunner(Runner):
         result = ClojureRunner._run_clojure(
             [
                 "-Sdeps",
-                '\'{:paths ["lib"] :deps {criterium/criterium {:mvn/version "0.4.6"}}}\'',
+                '\'{:paths ["lib", "vendor/ruuter/src"] :deps {criterium/criterium {:mvn/version "0.4.6"}}}\'',
                 "-M",
                 str(file),
             ]
@@ -76,7 +76,7 @@ class BabashkaRunner(Runner):
         return match.group(1)
 
     def run(self, file: Path) -> float:
-        result = BabashkaRunner._run_bb(["-cp", "lib", str(file)])
+        result = BabashkaRunner._run_bb(["-cp", "lib:vendor/ruuter/src", str(file)])
         return parse_time_macro(result.stdout)
 
 
@@ -100,7 +100,15 @@ class JankRunner(Runner):
 
     def run(self, file: Path) -> float:
         result = JankRunner._run_jank(
-            ["--module-path", "lib", "-O3", "--eagerness", "eager", "run", str(file)]
+            [
+                "--module-path",
+                "lib:vendor/ruuter/src",
+                "-O3",
+                "--eagerness",
+                "eager",
+                "run",
+                str(file),
+            ]
         )
 
         # TODO: simplify this one jank.perf can return benchmark results as
