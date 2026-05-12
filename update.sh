@@ -89,7 +89,7 @@ if [ "$PUBLISH" = true ]; then
 
 	pushd $IJFY_OUTPUT_DIR
 	git add -f index.html data/*.csv
-	git commit --author "Automation" -m "Update $(date -u)"
+	git commit --author "Automation <fake@example.com>" -m "Update $(date -u)"
 	git push origin gh-pages
 	popd
 fi
