@@ -17,15 +17,15 @@
 
 (defmacro sqrt [n]
   #?(:clj `(Math/sqrt ~n)
-     :jank `(clojure.core-native/sqrt ~n)))
+     :jank `(cpp/jank.runtime.sqrt ~n)))
 
 (defmacro tan [n]
   #?(:clj `(Math/tan ~n)
-     :jank `(clojure.core-native/tan ~n)))
+     :jank `(cpp/jank.runtime.tan ~n)))
 
 (defmacro pow [l r]
   #?(:clj `(Math/pow ~l ~r)
-     :jank `(clojure.core-native/pow ~l ~r)))
+     :jank `(cpp/jank.runtime.pow ~l ~r)))
 
 (defn vec3-create [r g b]
   {:r r

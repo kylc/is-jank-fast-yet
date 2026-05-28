@@ -110,14 +110,7 @@ class JankRunner(Runner):
                 str(file),
             ]
         )
-
-        # TODO: simplify this one jank.perf can return benchmark results as
-        # data.
-        m = re.search(r"\|\s+(\d+\.\d+)", result.stdout)
-        duration_ms = float(m.group(1))
-        duration_s = 1e-3 * duration_ms
-
-        return duration_s
+        return parse_time_macro(result.stdout)
 
 
 if __name__ == "__main__":

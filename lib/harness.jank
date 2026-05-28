@@ -2,5 +2,6 @@
   (:require [jank.perf :as perf]))
 
 (defmacro bench [expr]
-  `(perf/benchmark {} ~expr))
-
+  `(let [result# (perf/bench-to-data {} ~expr)
+         mean# (:mean result#)]
+     (println "Elapsed time:" mean# "s")))
