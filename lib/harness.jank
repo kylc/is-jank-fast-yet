@@ -1,6 +1,9 @@
 (ns harness
   (:require [jank.perf :as perf]))
 
-(defmacro bench [expr]
-  `(perf/benchmark {} ~expr))
+(def bench-opts {:epochs 100})
 
+(defmacro bench [expr]
+  `(let [result# (perf/bench-to-data bench-opts ~expr)
+         mean#   (:mean result#)]
+     (println "Elapsed time:" mean# "s")))
