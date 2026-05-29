@@ -25,7 +25,7 @@
 
 (defmacro pow [l r]
   #?(:clj `(Math/pow ~l ~r)
-     :jank `(cpp/jank.runtime.pow ~l ~r)))
+     :jank `(cpp/jank.runtime.pow (cpp/double ~l) (cpp/double ~r))))
 
 (defn vec3-create [r g b]
   {:r r
