@@ -16,6 +16,8 @@ OUTPUT_DIR = os.environ["IJFY_OUTPUT_DIR"]
 
 def parse_time_macro(s: str):
     m = re.search(r"Elapsed time: (\d+\.\d+)", s)
+    if not m:
+        raise RuntimeError("invalid time macro format")
     return float(m.group(1))
 
 
@@ -130,20 +132,25 @@ if __name__ == "__main__":
 
         with open(output_path, "a") as output_file:
             for runner in runners:
-                duration = runner.run(bench)
-                duration_ms = 1e3 * duration
+                try:
+                    duration = runner.run(bench)
+                    duration_ms = 1e3 * duration
 
-                print(f"{runner.name():<20}{runner.version():<20}\t{duration_ms:.3f}ms")
-
-                if not DRYRUN:
-                    output_file.write(
-                        ",".join(
-                            [
-                                str(start_time),
-                                runner.name(),
-                                runner.version(),
-                                str(duration_ms),
-                            ]
-                        )
-                        + "\n"
+                    print(
+                        f"{runner.name():<20}{runner.version():<20}\t{duration_ms:.3f}ms"
                     )
+
+                    if not DRYRUN:
+                        output_file.write(
+                            ",".join(
+                                [
+                                    str(start_time),
+                                    runner.name(),
+                                    runner.version(),
+                                    str(duration_ms),
+                                ]
+                            )
+                            + "\n"
+                        )
+                except RuntimeError as e:
+                    print("Failed to run benchmark, ignoring:", e)
