@@ -5,6 +5,7 @@ execute:
 format:
   html:
     embed-resources: true
+    css: custom.css
 jupyter: python3
 ---
 
@@ -70,9 +71,11 @@ for bench_file_path, df in zip(bench_file_paths, dfs):
         height=300,
         markers=True,
     )
-    fig.update_xaxes(tickformat="%-m/%-d\n%Y", title_text=None)
-    fig.update_yaxes(ticksuffix="x")
+    fig.update_xaxes(tickformat="%-m/%-d\n%Y", title_text=None, fixedrange=True)
+    fig.update_yaxes(ticksuffix="x", fixedrange=True)
     fig.update_layout(
+        dragmode=None,
+        clickmode=None,
         legend=dict(
             orientation="h",
             yanchor="bottom",
@@ -80,7 +83,7 @@ for bench_file_path, df in zip(bench_file_paths, dfs):
             xanchor="right",
             x=1,
             title_text="Language",
-        )
+        ),
     )
-    fig.show(config={"displayModeBar": False, "staticPlot": True})
+    fig.show(config={"displayModeBar": False})
 ```

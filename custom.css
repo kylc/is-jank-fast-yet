@@ -1,0 +1,7 @@
+/* Disable plot interaction on touch screens because it makes drag-scrolling the
+ * page difficult. */
+@media (pointer: coarse) {
+    .cursor-pointer {
+        pointer-events: none !important;
+    }
+}
