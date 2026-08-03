@@ -15,7 +15,7 @@ OUTPUT_DIR = os.environ["IJFY_OUTPUT_DIR"]
 
 
 def parse_time_macro(s: str):
-    m = re.search(r"Elapsed time: (\d+\.\d+)", s)
+    m = re.search(r"Elapsed time: (\S+) s", s)
     if not m:
         raise RuntimeError("invalid time macro format")
     return float(m.group(1))
