@@ -96,8 +96,8 @@ class JankRunner(Runner):
         return "jank"
 
     def version(self) -> str:
-        result = JankRunner._run_jank([])
-        match = re.search(r"jank compiler jank-(.+)", result.stdout)
+        result = JankRunner._run_jank(["check-health"])
+        match = re.search(r"jank version: jank-(.+)", result.stdout)
         return match.group(1)
 
     def run(self, file: Path) -> float:
