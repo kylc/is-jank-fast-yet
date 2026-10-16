@@ -106,8 +106,7 @@ class JankRunner(Runner):
                 "--module-path",
                 "lib:vendor/ruuter/src",
                 "-O3",
-                "--eagerness",
-                "eager",
+                "--eager",
                 "run",
                 str(file),
             ]
